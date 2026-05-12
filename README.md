@@ -1,29 +1,12 @@
 # AstroCode 📸
 
 <p align="center">
-  <img src="images/icon.png" width="128" alt="AstroCode Logo" />
+  <img src="icon.png" width="128" alt="AstroCode Logo" />
 </p>
 
 Convierte tu código en imágenes limpias y de alta calidad directamente desde Visual Studio Code.
 
 AstroCode está diseñado para desarrolladores que comparten su trabajo, crean documentación o generan contenido técnico, permitiendo exportar capturas de código profesionales en segundos sin salir del editor.
-
----
-
-## 🎯 Vista previa
-
-<p align="center">
-  <img src="images/result.png" width="800" />
-</p>
-
-<p align="center">
-  <img src="images/panel.png" width="800" />
-</p>
-
-<p align="center">
-  <img src="images/theme-dark.png" width="800" />
-  <img src="images/theme-light.png" width="800" />
-</p>
 
 ---
 
