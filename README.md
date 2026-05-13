@@ -1,7 +1,7 @@
 # AstroCode 📸
 
 <p align="center">
-  <img src="icon.png" width="128" alt="AstroCode Logo" />
+  <img src="https://raw.githubusercontent.com/GKPROEJECT/astrocode/main/icon.png" width="128" alt="AstroCode Logo" />
 </p>
 
 Convierte tu código en imágenes limpias y de alta calidad directamente desde Visual Studio Code.
@@ -15,6 +15,7 @@ AstroCode está diseñado para desarrolladores que comparten su trabajo, crean d
 - Resaltado de sintaxis de alta fidelidad mediante **Shiki**
 - Soporte para más de 40 lenguajes de programación
 - Temas visuales: Dracula, GitHub Dark, Nord, Gradient y Minimal
+- **Presets Rápidos**: Formatos optimizados para Twitter, GitHub y más
 - Control completo del diseño: padding, sombras y tipografía
 - Exportación en PNG en alta resolución (retina ready)
 - Interfaz lateral integrada en el editor, sin distracciones

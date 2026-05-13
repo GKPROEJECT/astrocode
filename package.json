@@ -3,7 +3,7 @@
   "displayName": "AstroCode",
   "publisher": "AstroCode",
   "description": "Crea capturas de código elegantes y profesionales al instante.",
-  "version": "1.0.2",
+  "version": "1.1.6",
   "engines": {
     "vscode": "^1.118.0"
   },
@@ -28,12 +28,12 @@
   "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gabriel/astrocode"
+    "url": "https://github.com/GKPROEJECT/astrocode"
   },
   "bugs": {
-    "url": "https://github.com/gabriel/astrocode/issues"
+    "url": "https://github.com/GKPROEJECT/astrocode/issues"
   },
-  "homepage": "https://github.com/gabriel/astrocode#readme",
+  "homepage": "https://github.com/GKPROEJECT/astrocode#readme",
   "contributes": {
     "commands": [
       {

@@ -29,12 +29,100 @@ interface ThemePreset {
     shadow: string;
 }
 
+interface QuickPreset {
+    id: string;
+    label: string;
+    config: Partial<{
+        themeId: string;
+        padding: number;
+        shadow: number;
+        fontSize: number;
+        width?: number | string;
+        aspectRatio?: string;
+    }>;
+}
+
 const PRESETS: ThemePreset[] = [
     { id: 'dracula', label: '🌑 Dracula', bg: '#282a36', shikiTheme: 'dracula', shadow: '0 20px 50px rgba(0,0,0,0.5)' },
     { id: 'github', label: '🌊 GitHub Dark', bg: '#0d1117', shikiTheme: 'github-dark', shadow: '0 20px 50px rgba(0,0,0,0.5)' },
     { id: 'nord', label: '🧊 Nord', bg: '#2e3440', shikiTheme: 'nord', shadow: '0 20px 50px rgba(0,0,0,0.5)' },
     { id: 'sunset', label: '🔥 Sunset', bg: 'linear-gradient(45deg, #ff5f6d, #ffc371)', shikiTheme: 'github-dark', shadow: '0 20px 50px rgba(0,0,0,0.3)' },
     { id: 'minimal', label: '🧼 Minimal', bg: '#ffffff', shikiTheme: 'github-light', shadow: '0 20px 50px rgba(0,0,0,0.1)' }
+];
+
+const QUICK_PRESETS: QuickPreset[] = [
+    { 
+        id: 'twitter', 
+        label: '🐦 Twitter Card', 
+        config: { 
+            themeId: 'sunset', 
+            padding: 80, 
+            shadow: 40, 
+            fontSize: 18,
+            width: 1200,
+            aspectRatio: '1200/630'
+        } 
+    },
+    { 
+        id: 'github_readme', 
+        label: '📖 GitHub README', 
+        config: { 
+            themeId: 'github', 
+            padding: 40, 
+            shadow: 20, 
+            fontSize: 14,
+            width: 800,
+            aspectRatio: 'auto'
+        } 
+    },
+    { 
+        id: 'dark_export', 
+        label: '🌑 Dark High-Res', 
+        config: { 
+            themeId: 'dracula', 
+            padding: 64, 
+            shadow: 80, 
+            fontSize: 18,
+            width: 'fit-content',
+            aspectRatio: 'auto'
+        } 
+    },
+    { 
+        id: 'minimal_export', 
+        label: '🧼 Pure Minimal', 
+        config: { 
+            themeId: 'minimal', 
+            padding: 48, 
+            shadow: 5, 
+            fontSize: 15,
+            width: 'fit-content',
+            aspectRatio: 'auto'
+        } 
+    },
+    { 
+        id: 'facebook', 
+        label: '👥 Facebook Post', 
+        config: { 
+            themeId: 'nord', 
+            padding: 80, 
+            shadow: 30, 
+            fontSize: 16,
+            width: 1200,
+            aspectRatio: '1.91/1'
+        } 
+    },
+    { 
+        id: 'tiktok', 
+        label: '📱 TikTok Video', 
+        config: { 
+            themeId: 'sunset', 
+            padding: 120, 
+            shadow: 60, 
+            fontSize: 20,
+            width: 1080,
+            aspectRatio: '9/16'
+        } 
+    }
 ];
 
 export async function createPreviewPanel(code: string, language: string) {
@@ -45,7 +133,9 @@ export async function createPreviewPanel(code: string, language: string) {
         shadow: 50,
         fontSize: 15,
         exportPreset: 2,
-        showSidebar: true
+        showSidebar: true,
+        width: 'fit-content' as number | string,
+        aspectRatio: 'auto'
     };
 
     const panel = vscode.window.createWebviewPanel(
@@ -53,7 +143,8 @@ export async function createPreviewPanel(code: string, language: string) {
         'AstroCode Preview',
         vscode.ViewColumn.Beside,
         {
-            enableScripts: true
+            enableScripts: true,
+            retainContextWhenHidden: true
         }
     );
 
@@ -65,8 +156,11 @@ export async function createPreviewPanel(code: string, language: string) {
     panel.webview.onDidReceiveMessage(async (message) => {
         switch (message.command) {
             case 'updateConfig':
+                const needsReRender = message.config.themeId && message.config.themeId !== state.themeId;
                 state = { ...state, ...message.config };
-                await update();
+                if (needsReRender) {
+                    await update();
+                }
                 break;
             case 'saveFile':
                 const { data, extension, defaultName } = message;
@@ -119,6 +213,11 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
 <style>
     :root {
         --sidebar-width: 280px;
+        --padding: ${state.padding}px;
+        --shadow: ${state.shadow}px;
+        --fontSize: ${state.fontSize}px;
+        --width: ${typeof state.width === 'number' ? state.width + 'px' : state.width};
+        --aspect-ratio: ${state.aspectRatio};
     }
     * {
         box-sizing: border-box;
@@ -192,7 +291,7 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
         min-width: var(--sidebar-width);
         background: #111;
         border-left: 1px solid #222;
-        padding: 24px;
+        padding: 24px 24px 100px 24px;
         display: flex;
         flex-direction: column;
         gap: 24px;
@@ -208,7 +307,7 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
         overflow: hidden;
     }
 
-    h3 { margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 1px; }
+    h3 { margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; color: #aaa; letter-spacing: 1px; }
 
     .config-group { display: flex; flex-direction: column; gap: 8px; }
 
@@ -248,21 +347,25 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
 
     /* Preview Area */
     .card-container {
-        padding: ${state.padding}px;
+        padding: var(--padding);
         background: ${preset.bg};
         display: flex;
         justify-content: center;
         align-items: center;
-        width: fit-content;
+        width: var(--width);
+        aspect-ratio: var(--aspect-ratio);
         margin: 40px auto;
         border-radius: 4px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
     }
 
     .card {
         background: ${preset.shikiTheme.includes('light') ? '#ffffff' : '#0d1117'};
         border-radius: 12px;
-        box-shadow: 0 ${state.shadow}px ${state.shadow * 2}px rgba(0,0,0,0.5);
+        box-shadow: 0 var(--shadow) calc(var(--shadow) * 2) rgba(0,0,0,0.5);
         overflow: hidden;
+        transition: all 0.3s ease;
         width: fit-content;
     }
 
@@ -289,7 +392,7 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
 
     code {
         font-family: 'Fira Code', 'Cascadia Code', Consolas, monospace;
-        font-size: ${state.fontSize}px;
+        font-size: var(--fontSize);
     }
 
     .shiki { background-color: transparent !important; padding: 0 !important; margin: 0 !important; }
@@ -298,6 +401,24 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
         background-color: transparent !important;
         display: block;
         min-height: 1em;
+    }
+    .reset-btn {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        color: #818cf8;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: #6366f1;
+        color: #fff;
     }
 </style>
 
@@ -328,6 +449,22 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
     </div>
 
     <div class="sidebar ${state.showSidebar ? '' : 'hidden'}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0;">Ajustes</h3>
+            <button onclick="resetConfig()" class="reset-btn">Reiniciar</button>
+        </div>
+
+        <div class="config-group">
+            <h3>Presets Rápidos</h3>
+            <div class="theme-grid">
+                ${QUICK_PRESETS.map(p => `
+                    <div class="theme-item" onclick="applyQuickPreset('${p.id}')">
+                        ${p.label}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+
         <div class="config-group">
             <h3>Tema</h3>
             <div class="theme-grid">
@@ -340,18 +477,27 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
         </div>
 
         <div class="config-group">
-            <h3>Padding</h3>
-            <input type="range" min="0" max="128" value="${state.padding}" oninput="updateConfig({padding: parseInt(this.value)})">
+            <div class="range-label">
+                <h3>Padding</h3>
+                <span id="val-padding">${state.padding}px</span>
+            </div>
+            <input type="range" min="0" max="128" value="${state.padding}" oninput="localUpdate('padding', this.value)">
         </div>
 
         <div class="config-group">
-            <h3>Sombra</h3>
-            <input type="range" min="0" max="100" value="${state.shadow}" oninput="updateConfig({shadow: parseInt(this.value)})">
+            <div class="range-label">
+                <h3>Sombra</h3>
+                <span id="val-shadow">${state.shadow}px</span>
+            </div>
+            <input type="range" min="0" max="100" value="${state.shadow}" oninput="localUpdate('shadow', this.value)">
         </div>
 
         <div class="config-group">
-            <h3>Tamaño Fuente</h3>
-            <input type="range" min="12" max="24" value="${state.fontSize}" oninput="updateConfig({fontSize: parseInt(this.value)})">
+            <div class="range-label">
+                <h3>Tamaño Fuente</h3>
+                <span id="val-fontSize">${state.fontSize}px</span>
+            </div>
+            <input type="range" min="12" max="24" value="${state.fontSize}" oninput="localUpdate('fontSize', this.value)">
         </div>
 
         <div class="config-group">
@@ -365,21 +511,116 @@ async function getHtml(code: string, language: string, state: any, highlighter: 
         const exportBtn = document.getElementById("exportBtn");
         const captureArea = document.getElementById("captureArea");
 
-        const config = ${JSON.stringify(state)};
+        let config = ${JSON.stringify(state)};
+        const quickPresets = ${JSON.stringify(QUICK_PRESETS)};
 
         function updateConfig(newConfig) {
+            // Actualizar el estado local
+            config = { ...config, ...newConfig };
+
+            // Actualización instantánea de dimensiones y estilos
+            if (newConfig.width !== undefined) {
+                const w = typeof newConfig.width === 'number' ? newConfig.width + 'px' : newConfig.width;
+                document.documentElement.style.setProperty('--width', w);
+            }
+            if (newConfig.aspectRatio !== undefined) {
+                document.documentElement.style.setProperty('--aspect-ratio', newConfig.aspectRatio);
+            }
+            
+            // Actualizar sliders y etiquetas si están presentes en newConfig
+            ['padding', 'shadow', 'fontSize', 'exportPreset'].forEach(key => {
+                if (newConfig[key] !== undefined) {
+                    if (key !== 'exportPreset') {
+                        document.documentElement.style.setProperty('--' + key, newConfig[key] + 'px');
+                        const label = document.getElementById('val-' + key);
+                        if (label) label.innerText = newConfig[key] + 'px';
+                    }
+                    const input = document.querySelector('input[oninput*="' + key + '"]');
+                    if (input) (input as any).value = newConfig[key];
+                }
+            });
+
+            if (newConfig.themeId) {
+                document.querySelectorAll('.theme-grid .theme-item').forEach(el => {
+                    const onclick = el.getAttribute('onclick') || '';
+                    if (onclick.includes('themeId')) {
+                        el.classList.toggle('active', onclick.indexOf("'" + newConfig.themeId + "'") !== -1);
+                    }
+                });
+            }
+
             vscode.postMessage({ command: 'updateConfig', config: newConfig });
         }
 
+        function localUpdate(key, value) {
+            const val = parseInt(value);
+            config[key] = val;
+            
+            // Actualización instantánea via CSS Variables
+            document.documentElement.style.setProperty('--' + key, val + 'px');
+            document.getElementById('val-' + key).innerText = val + 'px';
+
+            // Persistir cambios con debounce
+            clearTimeout(window.saveTimer);
+            window.saveTimer = setTimeout(() => {
+                updateConfig({ [key]: val });
+            }, 300);
+        }
+
+        function resetConfig() {
+            updateConfig({
+                themeId: 'dracula',
+                padding: 64,
+                shadow: 50,
+                fontSize: 15,
+                width: 'fit-content',
+                aspectRatio: 'auto',
+                showSidebar: true
+            });
+        }
+
+        function applyQuickPreset(id) {
+            const preset = quickPresets.find(p => p.id === id);
+            if (preset) {
+                updateConfig(preset.config);
+            }
+        }
+
         function toggleSidebar() {
-            updateConfig({ showSidebar: !config.showSidebar });
+            const newState = !config.showSidebar;
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.toggle-sidebar');
+            
+            if (newState) {
+                sidebar.classList.remove('hidden');
+                toggleBtn.style.right = 'calc(var(--sidebar-width) + 40px)';
+                toggleBtn.innerText = '→';
+            } else {
+                sidebar.classList.add('hidden');
+                toggleBtn.style.right = '20px';
+                toggleBtn.innerText = '←';
+            }
+            
+            updateConfig({ showSidebar: newState });
         }
 
         // Export PNG
         exportBtn.addEventListener("click", async () => {
             exportBtn.innerText = "⏳...";
             try {
-                const dataUrl = await htmlToImage.toPng(captureArea, { pixelRatio: config.exportPreset + 1 });
+                // Obtenemos el tamaño real del contenedor para la captura
+                const width = captureArea.offsetWidth;
+                const height = captureArea.offsetHeight;
+
+                const dataUrl = await htmlToImage.toPng(captureArea, { 
+                    pixelRatio: config.exportPreset || 2, 
+                    width: width,
+                    height: height,
+                    style: {
+                        margin: '0',
+                        transform: 'none'
+                    }
+                });
                 const base64Data = dataUrl.split(',')[1];
                 const binaryData = atob(base64Data);
                 const array = new Uint8Array(binaryData.length);
