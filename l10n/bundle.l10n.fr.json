@@ -1,0 +1,21 @@
+{
+    "noActiveEditor": "Aucun éditeur actif",
+    "selectCodeFirst": "Sélectionnez d'abord le code",
+    "errorInitializingHighlighter": "Erreur lors de l'initialisation du surligneur : {0}",
+    "errorRenderingPanel": "Erreur lors du rendu du panneau : {0}",
+    "files": "Fichiers",
+    "saveCapture": "Enregistrer la capture",
+    "captureSavedSuccessfully": "✅ Capture enregistrée avec succès dans : {0}",
+    "settings": "Paramètres",
+    "reset": "Réinitialiser",
+    "quickPresets": "Préréglages rapides",
+    "theme": "Thème",
+    "padding": "Marge",
+    "shadow": "Ombre",
+    "borderRadius": "Rayon de bordure",
+    "fontSize": "Taille de police",
+    "exportQuality": "Qualité d'exportation",
+    "windowTitle": "Titre de la fenêtre",
+    "errorExportingPng": "Erreur lors de l'exportation PNG : {0}",
+    "preview": "Aperçu"
+}

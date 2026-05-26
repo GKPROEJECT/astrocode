@@ -1,0 +1,21 @@
+{
+    "noActiveEditor": "No active editor",
+    "selectCodeFirst": "Select code first",
+    "errorInitializingHighlighter": "Error initializing highlighter: {0}",
+    "errorRenderingPanel": "Error rendering panel: {0}",
+    "files": "Files",
+    "saveCapture": "Save Capture",
+    "captureSavedSuccessfully": "✅ Capture saved successfully to: {0}",
+    "settings": "Settings",
+    "reset": "Reset",
+    "quickPresets": "Quick Presets",
+    "theme": "Theme",
+    "padding": "Padding",
+    "shadow": "Shadow",
+    "borderRadius": "Corner Radius",
+    "fontSize": "Font Size",
+    "exportQuality": "Export Quality",
+    "windowTitle": "Window Title",
+    "errorExportingPng": "Error exporting PNG: {0}",
+    "preview": "Preview"
+}

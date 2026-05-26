@@ -1,0 +1,21 @@
+{
+    "noActiveEditor": "No hay editor activo",
+    "selectCodeFirst": "Selecciona código primero",
+    "errorInitializingHighlighter": "Error al inicializar el resaltador de código: {0}",
+    "errorRenderingPanel": "Error al renderizar el panel: {0}",
+    "files": "Archivos",
+    "saveCapture": "Guardar Captura",
+    "captureSavedSuccessfully": "✅ Captura guardada con éxito en: {0}",
+    "settings": "Ajustes",
+    "reset": "Reiniciar",
+    "quickPresets": "Presets Rápidos",
+    "theme": "Tema",
+    "padding": "Padding",
+    "shadow": "Sombra",
+    "borderRadius": "Radio de Borde",
+    "fontSize": "Tamaño Fuente",
+    "exportQuality": "Calidad de Exportación",
+    "windowTitle": "Título de Ventana",
+    "errorExportingPng": "Error al exportar PNG: {0}",
+    "preview": "Vista Previa"
+}
