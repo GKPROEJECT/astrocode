@@ -39,6 +39,16 @@
 
 ---
 
+> [!NOTE]
+>
+> ### AstroCode is now in maintenance mode
+>
+> AstroCode has reached a stable and feature-complete state.
+>
+> The core functionality of the extension is considered complete, so no major new features are currently planned. Future development will focus on maintaining compatibility with Visual Studio Code, fixing bugs, and addressing issues when necessary.
+
+---
+
 ## ✨ What is AstroCode?
 
 **AstroCode** is a Visual Studio Code extension that lets you transform selected code into **clean, polished and customizable images**.
